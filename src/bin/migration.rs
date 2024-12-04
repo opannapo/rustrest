@@ -7,10 +7,10 @@ use std::path::Path;
 #[tokio::main]
 async fn main() {
     custom_log::init();
-    debug_info!("main api");
+    debug_info!("main migration");
 
     let cfg = Config::new();
-    debug_info!("main api {:?}", cfg);
+    debug_info!("main migration {:?}", cfg);
 
     // postgres://username:password@host:port/database_name?sslmode=disable&timezone=Asia/Jakarta
     let database_url = format!(
