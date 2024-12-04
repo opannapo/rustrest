@@ -5,7 +5,7 @@ pub fn init() {
     // Inisialisasi logger dengan format yang menyertakan file dan baris
     env_logger::Builder::new()
         .filter_level(log::LevelFilter::Info)
-        .format(|buf, record| {
+        .format(|buf, record: &log::Record<'_>| {
             writeln!(
                 buf,
                 "{} [{}:{}] -> {}",
@@ -16,4 +16,11 @@ pub fn init() {
             )
         })
         .init();
+}
+
+#[macro_export]
+macro_rules! debug_info {
+    ($($arg:tt)*) => {
+        log::info!($($arg)*);
+    };
 }
