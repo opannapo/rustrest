@@ -23,12 +23,10 @@ async fn main() {
     );
     debug_info!("database_url {}", database_url);
 
-    // Buat pool koneksi
     let pool = PgPool::connect(&database_url)
         .await
         .expect("Failed to connect to database");
 
-    // Jalankan migrasi
     let migrator = Migrator::new(Path::new("./migration")).await.unwrap();
     match migrator.run(&pool).await {
         Ok(_) => debug_info!("Migrations ran successfully"),
