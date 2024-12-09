@@ -1,2 +1,2 @@
 pub mod api;
-mod migration;
+pub mod migration;
