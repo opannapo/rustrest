@@ -1,3 +1,4 @@
+use crate::config::config::Config;
 use crate::http_handler::schema::request::RequestContext;
 use crate::http_handler::schema::response;
 use crate::http_handler::v1::credential::schema;
@@ -9,12 +10,17 @@ use std::sync::Arc;
 
 pub struct CredentialHandler {
     pub credential_service_impl: Arc<dyn CredentialService>,
+    pub app_config: Arc<Config>,
 }
 
 impl CredentialHandler {
-    pub fn new(credential_service_impl: Arc<dyn CredentialService>) -> Self {
+    pub fn new(
+        credential_service_impl: Arc<dyn CredentialService>,
+        app_config: Arc<Config>,
+    ) -> Self {
         CredentialHandler {
             credential_service_impl,
+            app_config,
         }
     }
 

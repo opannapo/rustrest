@@ -1,9 +1,13 @@
 use crate::repository::CredentialRepo;
+use deadpool_postgres::Pool;
+use std::sync::Arc;
 
-pub struct CredentialRepoImpl;
+pub struct CredentialRepoImpl {
+    pool: Arc<Pool>,
+}
 impl CredentialRepoImpl {
-    pub fn new() -> Self {
-        return CredentialRepoImpl {};
+    pub fn new(pool: Arc<Pool>) -> Self {
+        return CredentialRepoImpl { pool };
     }
 }
 

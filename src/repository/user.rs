@@ -1,9 +1,13 @@
 use crate::repository::UserRepo;
+use deadpool_postgres::Pool;
+use std::sync::Arc;
 
-pub struct UserRepoImpl {}
+pub struct UserRepoImpl {
+    pool: Arc<Pool>,
+}
 impl UserRepoImpl {
-    pub fn new() -> Self {
-        return UserRepoImpl {};
+    pub fn new(pool: Arc<Pool>) -> Self {
+        return UserRepoImpl { pool };
     }
 }
 
