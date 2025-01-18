@@ -1,7 +1,6 @@
+use crate::debug_info;
 use crate::model::credential::Credential;
 use crate::repository::CredentialRepo;
-// use deadpool_postgres::Pool;
-use crate::debug_info;
 use async_trait::async_trait;
 use sqlx::{Error, Pool, Postgres};
 use std::sync::Arc;
@@ -50,5 +49,3 @@ impl CredentialRepo for CredentialRepoImpl {
         todo!()
     }
 }
-
-

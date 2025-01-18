@@ -3,8 +3,10 @@ use crate::repository::{CredentialRepo, UserRepo};
 use crate::service::CredentialService;
 use crate::{debug_info, model};
 use async_trait::async_trait;
-use dotenv::Error;
+use bcrypt::hash;
+use log::error;
 use serde::de::Unexpected::Option;
+use std::error::Error;
 use std::sync::Arc;
 
 pub struct CredentialServiceImpl {
@@ -22,19 +24,23 @@ impl CredentialServiceImpl {
 
 #[async_trait]
 impl CredentialService for CredentialServiceImpl {
-    async fn create(&self, username: &str, password: &str) -> Result<AuthResponse, Error> {
+    async fn create(&self, username: &str, password: &str) -> Result<AuthResponse, Box<dyn Error>> {
         debug_info!("Creating credential");
 
         let random_uuid = uuid::Uuid::new_v4();
-        let password_hash = password.to_string();
+        let pwd_hash;
+        match hash(&password, 4) {
+            Ok(val) => pwd_hash = val,
+            Err(err) => return Err(Box::new(err)),
+        }
 
         let _ = self
             .credential_repo
             .create(model::credential::Credential {
-                user_id: random_uuid.to_string(),
+                user_id: random_uuid,
                 username: username.to_string(),
                 status: Some(1),
-                password_hash,
+                password_hash: pwd_hash.to_string(),
             })
             .await
             .unwrap();
