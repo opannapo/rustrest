@@ -39,7 +39,8 @@ async fn credential_auth(
     credential_service: web::Data<Arc<dyn CredentialService>>,
 ) -> impl Responder {
     let ctx = RequestContext::new(req);
-    let result =
-        credential_service.create(req_payload.username.as_str(), req_payload.password.as_str());
-    response::ok(ctx, result)
+    let result = credential_service
+        .create(req_payload.username.as_str(), req_payload.password.as_str())
+        .await;
+    response::ok(ctx, result.unwrap())
 }

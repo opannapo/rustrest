@@ -1,3 +1,5 @@
+use async_trait::async_trait;
+use dotenv::Error;
 use crate::http_handler::v1::auth::schema::AuthResponse;
 use crate::http_handler::v1::user::schema::UserResponse;
 
@@ -8,6 +10,7 @@ pub trait UserService {
     fn get_by_username(&self, username: &str) -> UserResponse;
 }
 
+#[async_trait]
 pub trait CredentialService {
-    fn create(&self, username: &str, password: &str) -> AuthResponse;
+    async fn create(&self, username: &str, password: &str) -> Result<AuthResponse, Error>;
 }
