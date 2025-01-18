@@ -40,6 +40,6 @@ async fn credential_auth(
 ) -> impl Responder {
     let ctx = RequestContext::new(req);
     let result =
-        credential_service.auth(req_payload.username.as_str(), req_payload.password.as_str());
+        credential_service.create(req_payload.username.as_str(), req_payload.password.as_str());
     response::ok(ctx, result)
 }

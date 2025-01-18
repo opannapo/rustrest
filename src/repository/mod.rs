@@ -1,7 +1,10 @@
 pub mod credential;
 pub mod user;
 
+use async_trait::async_trait;
+use crate::model;
 use deadpool_postgres::{Config, ManagerConfig, Pool, RecyclingMethod};
+use sqlx::Error;
 use tokio_postgres::NoTls;
 
 pub struct PostgresPool {
@@ -33,13 +36,16 @@ impl PostgresPool {
         cfg.create_pool(None, NoTls).expect("Failed to create pool")
     }
 }
-
+#[async_trait]
 pub trait UserRepo: Send + Sync {
-    fn create(&self);
-    fn get_by_id(&self, id: i64);
+    async fn create(&self, model: model::user::User) -> Result<(), Error>;
+    async fn get_by_id(&self, id: i64) -> Result<model::user::User, Error>;
 }
-
+#[async_trait]
 pub trait CredentialRepo: Send + Sync {
-    fn create(&self);
-    fn get_by_username(&self, username: String);
+    async fn create(&self, model: model::credential::Credential) -> Result<(), Error>;
+    async fn get_by_username(
+        &self,
+        username: String,
+    ) -> Result<model::credential::Credential, Error>;
 }

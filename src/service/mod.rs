@@ -9,5 +9,5 @@ pub trait UserService {
 }
 
 pub trait CredentialService {
-    fn auth(&self, username: &str, password: &str) -> AuthResponse;
+    fn create(&self, username: &str, password: &str) -> AuthResponse;
 }

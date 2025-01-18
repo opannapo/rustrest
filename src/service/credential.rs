@@ -17,7 +17,8 @@ impl CredentialServiceImpl {
 }
 
 impl CredentialService for CredentialServiceImpl {
-    fn auth(&self, username: &str, password: &str) -> AuthResponse {
+    fn create(&self, username: &str, password: &str) -> AuthResponse {
+        // self.credential_repo.create();
         let random_uuid = uuid::Uuid::new_v4();
         AuthResponse {
             username: username.to_string(),

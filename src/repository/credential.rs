@@ -1,6 +1,9 @@
+use crate::model::credential::Credential;
 use crate::repository::CredentialRepo;
 use deadpool_postgres::Pool;
+use sqlx::Error;
 use std::sync::Arc;
+use async_trait::async_trait;
 
 pub struct CredentialRepoImpl {
     pool: Arc<Pool>,
@@ -10,13 +13,13 @@ impl CredentialRepoImpl {
         return CredentialRepoImpl { pool };
     }
 }
-
+#[async_trait]
 impl CredentialRepo for CredentialRepoImpl {
-    fn create(&self) {
+    async fn create(&self, model: Credential) -> Result<(), Error> {
         todo!()
     }
 
-    fn get_by_username(&self, username: String) {
+    async fn get_by_username(&self, username: String) -> Result<Credential, Error> {
         todo!()
     }
 }
