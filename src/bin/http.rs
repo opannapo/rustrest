@@ -7,6 +7,7 @@ use rustrest::util::log as custom_log;
 use rustrest::{debug_info, http_handler, repository};
 use sqlx::{Error, Pool, Postgres};
 use std::sync::Arc;
+use uuid::Variant::Future;
 
 #[actix_web::main]
 pub async fn main() -> std::io::Result<()> {
@@ -34,6 +35,7 @@ pub async fn main() -> std::io::Result<()> {
     })
     .bind(("127.0.0.1", 8080))?
     .workers(1) //bikin auto aja ngikutin cpu thread -> comment untuk pakei default total cpu core
+    .shutdown_timeout(30)
     .run()
     .await
 }

@@ -1,7 +1,7 @@
 pub mod credential;
 pub mod user;
 
-use crate::model;
+use crate::{debug_info, model};
 use async_trait::async_trait;
 use sqlx::{Error, Pool, Postgres};
 
@@ -15,30 +15,11 @@ impl PostgresPool {
         })
     }
 
-    /*pub fn create_pool(app_config: &crate::config::config::Config) -> Pool {
-        //DATABASE_URL=postgres://username:password@localhost/dbname
-        let database_url = format!(
-            "postgres://{}:{}@{}:{}/{}",
-            app_config.database().db_username(),
-            app_config.database().db_password(),
-            app_config.database().db_host(),
-            app_config.database().db_port(),
-            app_config.database().db_name(),
-        );
-
-        let mut cfg = Config::new();
-        cfg.dbname = Some(database_url);
-        cfg.manager = Some(ManagerConfig {
-            recycling_method: RecyclingMethod::Fast,
-        });
-        cfg.create_pool(None, NoTls).expect("Failed to create pool")
-    }*/
-
     pub async fn create_pool(
         app_config: &crate::config::config::Config,
     ) -> Result<Pool<Postgres>, Error> {
         let database_url = format!(
-            "postgres://{}:{}@{}:{}/{}",
+            "postgres://{}:{}@{}:{}/{}?application_name=rustrest",
             app_config.database().db_username(),
             app_config.database().db_password(),
             app_config.database().db_host(),
@@ -46,8 +27,15 @@ impl PostgresPool {
             app_config.database().db_name(),
         );
 
-        // Membuat pool koneksi ke PostgreSQL
+        // create pool koneksi ke PostgreSQL
         let pool = Pool::connect(&database_url).await?;
+
+        //checking
+        let row: (i64,) = sqlx::query_as("SELECT count(*) FROM pg_stat_activity WHERE application_name='rustrest'")
+        .fetch_one(&pool)
+        .await?;
+        debug_info!("Checking Result of SELECT count(*) FROM pg_stat_activity WHERE application_name='rustrest' : {:?}", row);
+
         Ok(pool)
     }
 }
