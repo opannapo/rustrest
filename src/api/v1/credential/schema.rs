@@ -8,8 +8,7 @@ pub struct AuthRequest {
 
 #[derive(Serialize)]
 pub struct AuthResponse {
-    pub request_id: String,
+    pub user_id: String,
     pub username: String,
     pub password: String,
-    pub service_result: String,
 }

@@ -5,8 +5,6 @@ use crate::api::v1::credential::service::CredentialService;
 use actix_web::dev::HttpServiceFactory;
 use actix_web::web::Json;
 use actix_web::{post, web, HttpRequest, Responder};
-use chrono::{DateTime, Duration, Utc};
-use std::os::linux::raw::stat;
 use std::sync::Arc;
 
 pub struct CredentialHandler {
@@ -28,27 +26,14 @@ impl CredentialHandler {
     }
 }
 
-#[post("/auth")]
+#[post("/signup")]
 async fn credential_auth(
     req: HttpRequest,
     req_payload: Json<schema::AuthRequest>,
     credential_service: web::Data<Arc<dyn CredentialService>>,
 ) -> impl Responder {
-    let start_at: DateTime<Utc> = Utc::now();
-    let result = credential_service.auth(req_payload.username.as_str(), req_payload.password.as_str());
-    let random_uuid = uuid::Uuid::new_v4();
-    let ctx = RequestContext {
-        request: req,
-        start_at: start_at,
-    };
-
-    response::ok(
-        ctx,
-        schema::AuthResponse {
-            username: req_payload.username.to_string(),
-            password: req_payload.password.to_string(),
-            request_id: random_uuid.to_string(),
-            service_result: result.to_string(),
-        },
-    )
+    let ctx = RequestContext::new(req);
+    let result =
+        credential_service.auth(req_payload.username.as_str(), req_payload.password.as_str());
+    response::ok(ctx, result)
 }
