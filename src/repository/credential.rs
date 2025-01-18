@@ -1,15 +1,15 @@
 use crate::model::credential::Credential;
 use crate::repository::CredentialRepo;
-use deadpool_postgres::Pool;
-use sqlx::Error;
-use std::sync::Arc;
+// use deadpool_postgres::Pool;
 use async_trait::async_trait;
+use sqlx::{Error, Pool, Postgres};
+use std::sync::Arc;
 
 pub struct CredentialRepoImpl {
-    pool: Arc<Pool>,
+    pool: Arc<Pool<Postgres>>,
 }
 impl CredentialRepoImpl {
-    pub fn new(pool: Arc<Pool>) -> Self {
+    pub fn new(pool: Arc<Pool<Postgres>>) -> Self {
         return CredentialRepoImpl { pool };
     }
 }

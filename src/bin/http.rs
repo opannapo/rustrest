@@ -1,10 +1,11 @@
 use actix_web::{App, HttpServer};
 use rustrest::config::config::Config;
-use rustrest::repository::{credential, user, CredentialRepo, UserRepo};
+use rustrest::repository::{credential, user, CredentialRepo, PostgresPool, UserRepo};
 use rustrest::service::credential::CredentialServiceImpl;
 use rustrest::service::user::UserServiceImpl;
 use rustrest::util::log as custom_log;
 use rustrest::{debug_info, http_handler, repository};
+use sqlx::{Error, Pool, Postgres};
 use std::sync::Arc;
 
 #[actix_web::main]
@@ -14,8 +15,7 @@ pub async fn main() -> std::io::Result<()> {
     let app_cfg = Arc::new(Config::new());
     debug_info!("main api {:?}", &app_cfg);
 
-    let pg_pool = repository::PostgresPool::new(&app_cfg);
-    let pool = Arc::new(pg_pool.pool);
+    let pool: Arc<Pool<Postgres>> = Arc::new(PostgresPool::new(&app_cfg).await.unwrap().pool);
 
     let cred_repo = Arc::new(credential::CredentialRepoImpl::new(Arc::clone(&pool)));
     let user_repo = Arc::new(user::UserRepoImpl::new(Arc::clone(&pool)));

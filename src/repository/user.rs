@@ -1,15 +1,15 @@
 use crate::model::user::User;
 use crate::repository::UserRepo;
 use async_trait::async_trait;
-use deadpool_postgres::Pool;
-use sqlx::Error;
+// use deadpool_postgres::Pool;
+use sqlx::{Error, Pool, Postgres};
 use std::sync::Arc;
 
 pub struct UserRepoImpl {
-    pool: Arc<Pool>,
+    pool: Arc<Pool<Postgres>>,
 }
 impl UserRepoImpl {
-    pub fn new(pool: Arc<Pool>) -> Self {
+    pub fn new(pool: Arc<Pool<Postgres>>) -> Self {
         return UserRepoImpl { pool };
     }
 }

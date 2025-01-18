@@ -1,23 +1,21 @@
 pub mod credential;
 pub mod user;
 
-use async_trait::async_trait;
 use crate::model;
-use deadpool_postgres::{Config, ManagerConfig, Pool, RecyclingMethod};
-use sqlx::Error;
-use tokio_postgres::NoTls;
+use async_trait::async_trait;
+use sqlx::{Error, Pool, Postgres};
 
 pub struct PostgresPool {
-    pub pool: Pool,
+    pub pool: Pool<Postgres>,
 }
 impl PostgresPool {
-    pub fn new(app_config: &crate::config::config::Config) -> PostgresPool {
-        PostgresPool {
-            pool: Self::create_pool(app_config),
-        }
+    pub async fn new(app_config: &crate::config::config::Config) -> Result<PostgresPool, Error> {
+        Ok(PostgresPool {
+            pool: Self::create_pool(app_config).await?,
+        })
     }
 
-    pub fn create_pool(app_config: &crate::config::config::Config) -> Pool {
+    /*pub fn create_pool(app_config: &crate::config::config::Config) -> Pool {
         //DATABASE_URL=postgres://username:password@localhost/dbname
         let database_url = format!(
             "postgres://{}:{}@{}:{}/{}",
@@ -34,6 +32,23 @@ impl PostgresPool {
             recycling_method: RecyclingMethod::Fast,
         });
         cfg.create_pool(None, NoTls).expect("Failed to create pool")
+    }*/
+
+    pub async fn create_pool(
+        app_config: &crate::config::config::Config,
+    ) -> Result<Pool<Postgres>, Error> {
+        let database_url = format!(
+            "postgres://{}:{}@{}:{}/{}",
+            app_config.database().db_username(),
+            app_config.database().db_password(),
+            app_config.database().db_host(),
+            app_config.database().db_port(),
+            app_config.database().db_name(),
+        );
+
+        // Membuat pool koneksi ke PostgreSQL
+        let pool = Pool::connect(&database_url).await?;
+        Ok(pool)
     }
 }
 #[async_trait]
