@@ -3,6 +3,7 @@ pub mod user;
 
 use crate::{debug_info, model};
 use async_trait::async_trait;
+use sqlx::pool::PoolOptions;
 use sqlx::{Error, Pool, Postgres};
 
 pub struct PostgresPool {
@@ -28,10 +29,16 @@ impl PostgresPool {
         );
 
         // create pool koneksi ke PostgreSQL
-        let pool = Pool::connect(&database_url).await?;
+        let pool = PoolOptions::new()
+            .max_connections(10)
+            .min_connections(2)
+            .connect(database_url.as_str())
+            .await?;
 
         //checking
-        let row: (i64,) = sqlx::query_as("SELECT count(*) FROM pg_stat_activity WHERE application_name='rustrest'")
+        let row: (i64,) = sqlx::query_as(
+            "SELECT count(*) FROM pg_stat_activity WHERE application_name='rustrest'",
+        )
         .fetch_one(&pool)
         .await?;
         debug_info!("Checking Result of SELECT count(*) FROM pg_stat_activity WHERE application_name='rustrest' : {:?}", row);
