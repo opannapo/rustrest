@@ -1,4 +1,4 @@
-use crate::api::credential::repo::CredentialRepo;
+use crate::api::v1::credential::repo::CredentialRepo;
 
 pub trait CredentialService {
     fn auth(&self, username: &str, password: &str) -> &str;

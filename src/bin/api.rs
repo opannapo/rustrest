@@ -3,7 +3,7 @@ use rustrest::config::config::Config;
 use rustrest::util::log as custom_log;
 use rustrest::{api, debug_info};
 
-use api::credential;
+use api::v1::credential;
 
 #[actix_web::main]
 pub async fn main() -> std::io::Result<()> {
@@ -15,7 +15,7 @@ pub async fn main() -> std::io::Result<()> {
 
     HttpServer::new(|| App::new().configure(credential::init))
         .bind(("127.0.0.1", 8080))?
-        // .workers(1) , bikin auto aja ngikutin cpu thread
+        .workers(1) //bikin auto aja ngikutin cpu thread
         .run()
         .await
 }
