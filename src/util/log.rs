@@ -1,4 +1,4 @@
-use chrono::{DateTime, Local, Utc};
+use chrono::Local;
 use env_logger;
 use std::io::Write;
 
