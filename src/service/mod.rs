@@ -1,4 +1,4 @@
-use crate::http_handler::v1::credential::schema::AuthResponse;
+use crate::http_handler::v1::auth::schema::AuthResponse;
 use crate::http_handler::v1::user::schema::UserResponse;
 
 pub mod credential;

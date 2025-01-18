@@ -2,7 +2,7 @@ mod schema;
 pub mod v1;
 
 use crate::config::config::Config;
-use crate::http_handler::v1::credential::handler as cred_handler;
+use crate::http_handler::v1::auth::handler as cred_handler;
 use crate::http_handler::v1::user::handler as usr_handler;
 use crate::service::credential::CredentialServiceImpl;
 use crate::service::user::UserServiceImpl;

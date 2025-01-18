@@ -1,7 +1,7 @@
 use crate::config::config::Config;
 use crate::http_handler::schema::request::RequestContext;
 use crate::http_handler::schema::response;
-use crate::http_handler::v1::credential::schema;
+use crate::http_handler::v1::auth::schema;
 use crate::service::CredentialService;
 use actix_web::dev::HttpServiceFactory;
 use actix_web::web::Json;
@@ -25,7 +25,7 @@ impl CredentialHandler {
     }
 
     pub fn configuration_v1(&self, cfg: &mut web::ServiceConfig) {
-        let scope = web::scope("/v1/credential")
+        let scope = web::scope("/v1/auth")
             .app_data(web::Data::new(self.credential_service_impl.clone()))
             .service(credential_auth);
         cfg.service(scope);
