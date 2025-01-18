@@ -18,7 +18,7 @@ impl CredentialRepo for CredentialRepoImpl {
     async fn create(&self, model: Credential) -> Result<(), Error> {
         debug_info!("");
 
-        let result = sqlx::query(
+        sqlx::query(
             "INSERT INTO public.credential (username, password_hash, user_id, status) VALUES ($1, $2, $3, $4)",
         )
         .bind(model.username)
@@ -29,20 +29,6 @@ impl CredentialRepo for CredentialRepoImpl {
         .await?;
 
         Ok(())
-
-        // Query ke pg_stat_activity
-        /*let row: (i64,) = sqlx::query_as(
-            "SELECT count(*) FROM pg_stat_activity WHERE application_name='rustrest'",
-        )
-            .fetch_one(&*self.pool) // Menggunakan dereferensi Arc
-            .await?;
-
-        debug_info!(
-            "Checking Result of SELECT count(*) FROM pg_stat_activity WHERE application_name='rustrest' : {:?}",
-            row
-        );
-
-        Ok(())*/
     }
 
     async fn get_by_username(&self, username: String) -> Result<Credential, Error> {
