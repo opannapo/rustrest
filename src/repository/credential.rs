@@ -15,11 +15,15 @@ impl CredentialRepoImpl<Postgres> {
 }
 #[async_trait]
 impl CredentialRepo<Postgres> for CredentialRepoImpl<Postgres> {
-    async fn create(&self, model: Credential, tx: &Transaction<'_, Postgres>) -> Result<(), Error> {
+    async fn create(
+        &self,
+        model: Credential,
+        tx: Option<&mut Transaction<'_, Postgres>>,
+    ) -> Result<(), Error> {
         debug_info!("");
 
         sqlx::query(
-            "INSERT INTO public.credential (username, password_hash, user_id, status) VALUES ($1, $2, $3, $4)",
+            "INSERT INTO credential (username, password_hash, user_id, status) VALUES ($1, $2, $3, $4)",
         )
         .bind(model.username)
         .bind(model.password_hash)

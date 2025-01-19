@@ -14,7 +14,9 @@ CREATE TABLE public.credential
     CONSTRAINT credential_pk PRIMARY KEY (username)
 );
 CREATE INDEX credential_status_idx ON public.credential USING btree (status);
+CREATE INDEX credential_user_id_idx ON public.credential USING btree (user_id);
 
 -- Column comments
 
-COMMENT ON COLUMN public.credential.status IS '0 inactive, 1 active';
+COMMENT
+ON COLUMN public.credential.status IS '0 inactive, 1 active';

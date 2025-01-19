@@ -7,7 +7,6 @@ use async_trait::async_trait;
 use bcrypt::hash;
 use log::error;
 use serde::__private::de::IdentifierDeserializer;
-use serde::de::Unexpected::Option;
 use sqlx::{Postgres, Transaction};
 use std::error::Error;
 use std::sync::Arc;
@@ -44,13 +43,37 @@ impl CredentialService for CredentialServiceImpl {
             Err(err) => return Err(Box::new(err)),
         }
 
-        let tx: Transaction<Postgres>;
+        let mut tx: Transaction<Postgres>;
         let tx_result = self.base_repo.transaction_begin().await;
         match tx_result {
-            Ok(val) => {
-                tx = val;
-            }
+            Ok(val) => tx = val,
+            Err(err) => return Err(Box::new(err)),
+        }
+
+        let now = chrono::Utc::now().naive_utc();
+
+        match self
+            .user_repo
+            .create(
+                model::user::User {
+                    created_at: now,
+                    birthdate: Some(now),
+                    gender: None,
+                    id: random_uuid,
+                    latitude: 0.0,
+                    longitude: 0.0,
+                    name: Option::from(username.to_string()),
+                },
+                Some(&mut tx),
+            )
+            .await
+        {
+            Ok(_) => {}
             Err(err) => {
+                debug_error!("{}", err);
+                tx.rollback().await?;
+
+                let err = InternalError::db_exec(format!("create user {}", err).as_str());
                 return Err(Box::new(err));
             }
         }
@@ -65,7 +88,7 @@ impl CredentialService for CredentialServiceImpl {
                     password_hash: pwd_hash.to_string(),
                     created_at: chrono::Utc::now(),
                 },
-                &tx,
+                Some(&mut tx),
             )
             .await
         {
@@ -74,7 +97,7 @@ impl CredentialService for CredentialServiceImpl {
                 debug_error!("{}", err);
                 tx.rollback().await?;
 
-                let err = InternalError::db_exec(format!("{}", err).as_str());
+                let err = InternalError::db_exec(format!("create credential {}", err).as_str());
                 return Err(Box::new(err));
             }
         }

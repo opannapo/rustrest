@@ -60,7 +60,11 @@ pub trait BaseRepo<DB: Database>: Send + Sync {
 }
 #[async_trait]
 pub trait UserRepo<DB: Database>: Send + Sync {
-    async fn create(&self, model: model::user::User, tx: Transaction<'_, DB>) -> Result<(), Error>;
+    async fn create(
+        &self,
+        model: model::user::User,
+        tx: Option<&mut Transaction<'_, Postgres>>,
+    ) -> Result<(), Error>;
     async fn get_by_id(&self, id: i64) -> Result<model::user::User, Error>;
 }
 #[async_trait]
@@ -68,7 +72,7 @@ pub trait CredentialRepo<DB: Database>: Send + Sync {
     async fn create(
         &self,
         model: model::credential::Credential,
-        tx: &Transaction<'_, DB>,
+        tx: Option<&mut Transaction<'_, Postgres>>,
     ) -> Result<(), Error>;
     async fn get_by_username(
         &self,
