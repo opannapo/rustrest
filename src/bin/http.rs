@@ -1,8 +1,7 @@
 use actix_web::{App, HttpServer};
 use rustrest::config::config::Config;
-use rustrest::repository::{
-    base, credential, user, BaseRepo, CredentialRepo, PostgresPool, UserRepo,
-};
+use rustrest::repository::postgres::postgres::PostgresPool;
+use rustrest::repository::postgres::{base, credential, user};
 use rustrest::service::credential::CredentialServiceImpl;
 use rustrest::service::user::UserServiceImpl;
 use rustrest::util::log as custom_log;
