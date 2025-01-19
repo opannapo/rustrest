@@ -4,3 +4,4 @@ pub mod repository;
 pub mod service;
 pub mod util;
 mod model;
+mod common;

@@ -1,3 +1,4 @@
+use crate::common::internal_error::InternalError;
 use crate::http_handler::v1::auth::schema::AuthResponse;
 use crate::repository::{BaseRepo, CredentialRepo, UserRepo};
 use crate::service::CredentialService;
@@ -72,6 +73,8 @@ impl CredentialService for CredentialServiceImpl {
             Err(err) => {
                 debug_error!("{}", err);
                 tx.rollback().await?;
+
+                let err = InternalError::db_exec(format!("{}", err).as_str());
                 return Err(Box::new(err));
             }
         }

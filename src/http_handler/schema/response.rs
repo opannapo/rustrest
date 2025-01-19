@@ -1,3 +1,5 @@
+use crate::common::internal_error;
+use crate::common::internal_error::InternalError;
 use crate::debug_info;
 use crate::http_handler::schema::request::RequestContext;
 use actix_web::body::{BodySize, BoxBody, MessageBody};
@@ -68,15 +70,6 @@ pub fn ok<T: Serialize>(context: RequestContext, t: T) -> HttpResponse {
 pub fn err(context: RequestContext, error: Box<dyn Error>) -> HttpResponse {
     let time_end_duration: Duration = Utc::now().signed_duration_since(context.start_at);
     let duration_serializable = DurationSerializable::from(time_end_duration);
-    let res: BaseResponse<String> = BaseResponse {
-        data: None,
-        error: Option::from(error.to_string()),
-        duration: DurationSerializable {
-            secs: duration_serializable.secs,
-            nanos: duration_serializable.nanos,
-            millis: duration_serializable.millis,
-        },
-    };
 
     debug_info!(
         "req {:?} || duration secs {:?} nanos {:?} millis {:?}",
@@ -86,5 +79,31 @@ pub fn err(context: RequestContext, error: Box<dyn Error>) -> HttpResponse {
         duration_serializable.millis,
     );
 
-    HttpResponse::Ok().json(res)
+    let res: BaseResponse<String>;
+    match error.downcast::<InternalError>() {
+        Ok(internal_error) => {
+            res = BaseResponse {
+                data: None,
+                error: Option::from(internal_error.to_string()),
+                duration: DurationSerializable {
+                    secs: duration_serializable.secs,
+                    nanos: duration_serializable.nanos,
+                    millis: duration_serializable.millis,
+                },
+            };
+            HttpResponse::build(internal_error.http_status_code).json(res)
+        }
+        Err(e) => {
+            res = BaseResponse {
+                data: None,
+                error: Option::from(e.to_string()),
+                duration: DurationSerializable {
+                    secs: duration_serializable.secs,
+                    nanos: duration_serializable.nanos,
+                    millis: duration_serializable.millis,
+                },
+            };
+            HttpResponse::build(StatusCode::INTERNAL_SERVER_ERROR).json(res)
+        }
+    }
 }
