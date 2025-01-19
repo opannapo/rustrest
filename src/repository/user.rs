@@ -41,6 +41,7 @@ impl UserRepo<Postgres> for UserRepoImpl<Postgres> {
         .bind(model.gender)
         .bind(model.latitude)
         .bind(model.longitude);
+
         if let Some(tx) = tx {
             match q.execute(&mut **tx).await {
                 Ok(pg_query_result) => {
