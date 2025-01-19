@@ -26,3 +26,10 @@ macro_rules! debug_info {
         log::info!($($arg)*);
     };
 }
+
+#[macro_export]
+macro_rules! debug_error {
+    ($($arg:tt)*) => {
+        log::error!($($arg)*);
+    };
+}

@@ -2,12 +2,13 @@ use crate::http_handler::v1::user::schema::UserResponse;
 use crate::repository::UserRepo;
 use crate::service::UserService;
 use std::sync::Arc;
+use sqlx::Postgres;
 
 pub struct UserServiceImpl {
-    user_repo: Arc<dyn UserRepo>,
+    user_repo: Arc<dyn UserRepo<Postgres>>,
 }
 impl UserServiceImpl {
-    pub fn new(user_repo: Arc<dyn UserRepo>) -> Self {
+    pub fn new(user_repo: Arc<dyn UserRepo<Postgres>>) -> Self {
         UserServiceImpl { user_repo }
     }
 }

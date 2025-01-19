@@ -2,20 +2,20 @@ use crate::debug_info;
 use crate::model::credential::Credential;
 use crate::repository::CredentialRepo;
 use async_trait::async_trait;
-use sqlx::{Error, Pool, Postgres};
+use sqlx::{Database, Error, Pool, Postgres, Transaction};
 use std::sync::Arc;
 
-pub struct CredentialRepoImpl {
-    pool: Arc<Pool<Postgres>>,
+pub struct CredentialRepoImpl<DB: Database> {
+    pool: Arc<Pool<DB>>,
 }
-impl CredentialRepoImpl {
+impl CredentialRepoImpl<Postgres> {
     pub fn new(pool: Arc<Pool<Postgres>>) -> Self {
         return CredentialRepoImpl { pool };
     }
 }
 #[async_trait]
-impl CredentialRepo for CredentialRepoImpl {
-    async fn create(&self, model: Credential) -> Result<(), Error> {
+impl CredentialRepo<Postgres> for CredentialRepoImpl<Postgres> {
+    async fn create(&self, model: Credential, tx: &Transaction<'_, Postgres>) -> Result<(), Error> {
         debug_info!("");
 
         sqlx::query(

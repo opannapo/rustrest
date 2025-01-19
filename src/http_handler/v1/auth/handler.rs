@@ -1,6 +1,7 @@
 use crate::config::config::Config;
 use crate::http_handler::schema::request::RequestContext;
 use crate::http_handler::schema::response;
+use crate::http_handler::schema::response::err;
 use crate::http_handler::v1::auth::schema;
 use crate::service::CredentialService;
 use actix_web::dev::HttpServiceFactory;
@@ -42,5 +43,8 @@ async fn credential_auth(
     let result = credential_service
         .create(req_payload.username.as_str(), req_payload.password.as_str())
         .await;
-    response::ok(ctx, result.unwrap())
+    match result {
+        Ok(user) => response::ok(ctx, user),
+        Err(err) => response::err(ctx, err),
+    }
 }

@@ -1,10 +1,12 @@
+pub mod base;
 pub mod credential;
 pub mod user;
 
 use crate::{debug_info, model};
 use async_trait::async_trait;
 use sqlx::pool::PoolOptions;
-use sqlx::{Error, Pool, Postgres};
+use sqlx::{Database, Error, Pool, Postgres, Transaction};
+use std::sync::Arc;
 use std::time::Duration;
 
 pub struct PostgresPool {
@@ -45,17 +47,29 @@ impl PostgresPool {
         .await?;
         debug_info!("Checking Result of SELECT count(*) FROM pg_stat_activity WHERE application_name='rustrest' : {:?}", row);
 
+        pool.begin().await?;
         Ok(pool)
     }
 }
+
 #[async_trait]
-pub trait UserRepo: Send + Sync {
-    async fn create(&self, model: model::user::User) -> Result<(), Error>;
+pub trait BaseRepo<DB: Database>: Send + Sync {
+    async fn transaction_begin(&self) -> Result<Transaction<'static, DB>, Error>;
+    async fn commit_transaction(&self, transaction: Transaction<'_, DB>) -> Result<(), Error>;
+    async fn rollback_transaction(&self, transaction: Transaction<'_, DB>) -> Result<(), Error>;
+}
+#[async_trait]
+pub trait UserRepo<DB: Database>: Send + Sync {
+    async fn create(&self, model: model::user::User, tx: Transaction<'_, DB>) -> Result<(), Error>;
     async fn get_by_id(&self, id: i64) -> Result<model::user::User, Error>;
 }
 #[async_trait]
-pub trait CredentialRepo: Send + Sync {
-    async fn create(&self, model: model::credential::Credential) -> Result<(), Error>;
+pub trait CredentialRepo<DB: Database>: Send + Sync {
+    async fn create(
+        &self,
+        model: model::credential::Credential,
+        tx: &Transaction<'_, DB>,
+    ) -> Result<(), Error>;
     async fn get_by_username(
         &self,
         username: String,

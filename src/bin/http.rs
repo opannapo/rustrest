@@ -1,6 +1,8 @@
 use actix_web::{App, HttpServer};
 use rustrest::config::config::Config;
-use rustrest::repository::{credential, user, CredentialRepo, PostgresPool, UserRepo};
+use rustrest::repository::{
+    base, credential, user, BaseRepo, CredentialRepo, PostgresPool, UserRepo,
+};
 use rustrest::service::credential::CredentialServiceImpl;
 use rustrest::service::user::UserServiceImpl;
 use rustrest::util::log as custom_log;
@@ -18,10 +20,12 @@ pub async fn main() -> std::io::Result<()> {
 
     let pool: Arc<Pool<Postgres>> = Arc::new(PostgresPool::new(&app_cfg).await.unwrap().pool);
 
+    let base_repo = Arc::new(base::BaseRepositoryImpl::new(Arc::clone(&pool)));
     let cred_repo = Arc::new(credential::CredentialRepoImpl::new(Arc::clone(&pool)));
     let user_repo = Arc::new(user::UserRepoImpl::new(Arc::clone(&pool)));
 
     let cred_service = Arc::new(CredentialServiceImpl::new(
+        base_repo.clone(),
         cred_repo.clone(),
         user_repo.clone(),
     ));

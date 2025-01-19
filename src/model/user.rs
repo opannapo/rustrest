@@ -10,4 +10,5 @@ pub struct User {
     pub gender: Option<String>,
     pub latitude: f64,
     pub longitude: f64,
+    pub created_at: NaiveDateTime,
 }
