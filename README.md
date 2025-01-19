@@ -1,8 +1,10 @@
 # Rustrest
+#
 
 ## Overview
 
 This project is built using a combination of modern technologies aimed at creating a highly efficient and scalable backend. The backend utilizes Rust with the `actix-web` framework to handle HTTP requests, `sqlx` for asynchronous database access, and Postgres for data persistence. The project also includes features like transactional database execution and bcrypt hashing for security. Performance testing is done using JMeter.
+#
 
 ## Technologies Used
 
@@ -15,6 +17,7 @@ This project is built using a combination of modern technologies aimed at creati
 - **Postgres**: A powerful relational database management system (RDBMS) used to persist data.
 - **Dotenv**: Manages environment variables, keeping sensitive configurations like database credentials safe.
 - **Bcrypt**: A hashing algorithm used to securely store and compare passwords.
+#
 
 ## Features
 
@@ -24,6 +27,8 @@ This project is built using a combination of modern technologies aimed at creati
 - **Scalable and Concurrent**: Powered by `actix-web` and `Tokio`, the system is designed to handle large-scale, concurrent operations.
 - **Sqlx Migration**: Powered by `sqlx`.
 
+#
+
 ## Getting Started
 
 ### Prerequisites
@@ -32,6 +37,7 @@ This project is built using a combination of modern technologies aimed at creati
 - Install Postgres: [Postgres Installation Guide](https://www.postgresql.org/download/) / Docker: [Docker](https://hub.docker.com/_/postgres)
 - Install JMeter: [JMeter Installation Guide](https://jmeter.apache.org/download_jmeter.cgi)
 
+#
 
 ## Setup
 Rust & Cargo
@@ -94,6 +100,7 @@ JMeter
     ```bash
     make run-bin-migration-new filename=create_table_location
     ```
+#
 
 ## Performance Testing
 
