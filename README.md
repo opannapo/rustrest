@@ -95,7 +95,7 @@ JMeter
     make run-bin-migration-new filename=create_table_location
     ```
 
-### Performance Testing
+## Performance Testing
 
 To run performance tests using JMeter:
 
@@ -106,6 +106,27 @@ To run performance tests using JMeter:
    ```
 2. Run the test plan with your desired load configuration.
 3. Review the results and analyze the system performance.
+
+### JMeter Result
+- Number of Threads (users) = 1.000.000
+- No Thread Delay
+- Execution time duration (00:06:48) 6min 48sec
+![image](https://github.com/user-attachments/assets/53f8a05f-dd45-47cb-b7a8-a5bc16005919)
+
+### Postgres DB
+- Connection Pool Max = 50
+- Connection Pool Min = 2
+![image](https://github.com/user-attachments/assets/20fb17a6-51f8-4b08-b806-2d98c73c33f0)
+
+### App
+- Processing = Inserting 1,000,000 records into the user and credential tables within a transaction via the POST endpoint http://localhost:8080/v1/auth/signup with 1,000,000 requests.
+- Actix Web worker count = 20
+- Mem Usage = 25.7Mb
+- Cpu Usage = 27.05%
+![image](https://github.com/user-attachments/assets/8ece02bd-8a83-49db-86c4-2c94883de329)
+
+
+#
 
 ## Specs of the Development Laptop
 ```bash
