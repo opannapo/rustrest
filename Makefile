@@ -8,3 +8,7 @@ run-bin-http:
 
 run-bin-migration-up:
 	cargo run --bin migration up
+
+
+build-bin-http:
+	cargo build --release --bin http

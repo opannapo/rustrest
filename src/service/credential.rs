@@ -5,6 +5,7 @@ use crate::{debug_info, model};
 use async_trait::async_trait;
 use bcrypt::hash;
 use log::error;
+use serde::__private::de::IdentifierDeserializer;
 use serde::de::Unexpected::Option;
 use std::error::Error;
 use std::sync::Arc;
@@ -34,11 +35,12 @@ impl CredentialService for CredentialServiceImpl {
             Err(err) => return Err(Box::new(err)),
         }
 
+        let new_username = format!("{}@{}", username, random_uuid);
         let _ = self
             .credential_repo
             .create(model::credential::Credential {
                 user_id: random_uuid,
-                username: username.to_string(),
+                username: new_username,
                 status: Some(1),
                 password_hash: pwd_hash.to_string(),
             })

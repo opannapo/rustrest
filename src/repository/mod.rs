@@ -5,6 +5,7 @@ use crate::{debug_info, model};
 use async_trait::async_trait;
 use sqlx::pool::PoolOptions;
 use sqlx::{Error, Pool, Postgres};
+use std::time::Duration;
 
 pub struct PostgresPool {
     pub pool: Pool<Postgres>,
@@ -30,8 +31,9 @@ impl PostgresPool {
 
         // create pool koneksi ke PostgreSQL
         let pool = PoolOptions::new()
-            .max_connections(10)
+            .max_connections(50)
             .min_connections(2)
+            .idle_timeout(Duration::from_secs(60))
             .connect(database_url.as_str())
             .await?;
 
