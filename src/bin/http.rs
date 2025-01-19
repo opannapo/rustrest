@@ -38,7 +38,6 @@ pub async fn main() -> std::io::Result<()> {
     })
     .bind(("127.0.0.1", 8080))?
     // .workers(1) //bikin auto aja ngikutin cpu thread -> comment untuk pakei default total cpu core
-    .workers(1) //bikin auto aja ngikutin cpu thread -> comment untuk pakei default total cpu core
     .shutdown_timeout(30)
     .run()
     .await
