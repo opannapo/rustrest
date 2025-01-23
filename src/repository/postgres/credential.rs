@@ -23,7 +23,11 @@ impl CredentialRepo<Postgres> for CredentialRepoImpl<Postgres> {
         debug_info!("");
 
         let q=sqlx::query(
-            r#"INSERT INTO credential (username, password_hash, user_id, status) VALUES ($1, $2, $3, $4)"#,
+            r#"
+            INSERT INTO credential
+                (username, password_hash, user_id, status) VALUES
+                ($1, $2, $3, $4)
+            "#,
         )
         .bind(model.username)
         .bind(model.password_hash)
