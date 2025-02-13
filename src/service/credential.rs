@@ -1,5 +1,5 @@
 use crate::common::internal_error::InternalError;
-use crate::http_handler::v1::auth::schema::AuthResponse;
+use crate::api::v1::auth::schema::AuthResponse;
 use crate::repository::{BaseRepo, CredentialRepo, UserRepo};
 use crate::service::CredentialService;
 use crate::{debug_error, debug_info, model};

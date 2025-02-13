@@ -1,6 +1,6 @@
+use crate::api::schema::request::RequestContext;
+use crate::api::schema::response;
 use crate::config::config::Config;
-use crate::http_handler::schema::request::RequestContext;
-use crate::http_handler::schema::response;
 use crate::service::UserService;
 use actix_web::dev::HttpServiceFactory;
 use actix_web::{get, web, HttpRequest, Responder};
