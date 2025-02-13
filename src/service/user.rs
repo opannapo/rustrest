@@ -1,4 +1,4 @@
-use crate::http_handler::v1::user::schema::UserResponse;
+use crate::api::v1::user::schema::UserResponse;
 use crate::repository::UserRepo;
 use crate::service::UserService;
 use sqlx::Postgres;

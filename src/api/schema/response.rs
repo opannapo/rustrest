@@ -1,7 +1,7 @@
 use crate::common::internal_error;
 use crate::common::internal_error::InternalError;
 use crate::debug_info;
-use crate::http_handler::schema::request::RequestContext;
+use crate::api::schema::request::RequestContext;
 use actix_web::body::{BodySize, BoxBody, MessageBody};
 use actix_web::cookie::time::convert::Millisecond;
 use actix_web::http::StatusCode;

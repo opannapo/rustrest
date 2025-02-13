@@ -1,7 +1,7 @@
+pub mod api;
+mod common;
 pub mod config;
-pub mod http_handler;
+mod model;
 pub mod repository;
 pub mod service;
 pub mod util;
-mod model;
-mod common;

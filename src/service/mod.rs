@@ -1,5 +1,5 @@
-use crate::http_handler::v1::auth::schema::AuthResponse;
-use crate::http_handler::v1::user::schema::UserResponse;
+use crate::api::v1::auth::schema::AuthResponse;
+use crate::api::v1::user::schema::UserResponse;
 use async_trait::async_trait;
 use std::error::Error;
 

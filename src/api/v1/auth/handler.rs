@@ -1,8 +1,7 @@
+use crate::api::schema::request::RequestContext;
+use crate::api::schema::response;
+use crate::api::v1::auth::schema;
 use crate::config::config::Config;
-use crate::http_handler::schema::request::RequestContext;
-use crate::http_handler::schema::response;
-use crate::http_handler::schema::response::err;
-use crate::http_handler::v1::auth::schema;
 use crate::service::CredentialService;
 use actix_web::dev::HttpServiceFactory;
 use actix_web::web::Json;
