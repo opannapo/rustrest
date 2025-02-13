@@ -77,13 +77,13 @@ JMeter
 1. Build (release) the project:
 
     ```bash
-    make build-bin-http
+    make build-bin-api-release
     ```
 
 2. Run the project:
 
     ```bash
-    make run-bin-http
+    make run-bin-api
     ```
 
 
