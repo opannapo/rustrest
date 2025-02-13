@@ -56,6 +56,12 @@ JMeter
 [2] unzip apache-jmeter-5.3.zip
 ```
 
+### TypeSense
+```
+make build-typesense-compose
+```
+Dashboard (API_KEY : opannapoTESTapiKEY123):<br>
+https://bfritscher.github.io/typesense-dashboard/#/apikeys
 
 ### Environment Setup
 

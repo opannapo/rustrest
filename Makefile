@@ -1,5 +1,3 @@
-.PHONY: run-with-log run-bin-http run-bin-migration-up run-bin-migration-new
-
 run-with-log:
 	UST_LOG=debug cargo run
 
@@ -14,3 +12,9 @@ run-bin-migration-new:
 
 build-bin-api-release:
 	cargo build --release --bin api
+
+build-typesense-compose:
+	docker-compose -f typesense-compose.yml up -d
+
+
+.PHONY: run-with-log run-bin-api run-bin-migration-up run-bin-migration-new build-typesense-compose
