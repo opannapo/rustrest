@@ -3,6 +3,7 @@ use crate::repository::{BaseRepo, CredentialRepo, UserRepo};
 use crate::service::auth::schema::{SignupRequest, SignupResponse};
 use crate::service::user::UserServiceImpl;
 use crate::service::AuthService;
+use crate::util::location::generate_random_lat_lon;
 use crate::{debug_error, debug_info, model};
 use async_trait::async_trait;
 use bcrypt::hash;
