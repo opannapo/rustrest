@@ -1,32 +1,29 @@
 use crate::api::schema::request::RequestContext;
 use crate::api::schema::response;
-use crate::api::v1::auth::schema;
 use crate::config::config::Config;
-use crate::service::CredentialService;
+use crate::service::auth::schema as auth_service_schema;
+use crate::service::AuthService;
 use actix_web::dev::HttpServiceFactory;
 use actix_web::web::Json;
 use actix_web::{post, web, HttpRequest, Responder};
 use std::sync::Arc;
 
 pub struct CredentialHandler {
-    pub credential_service_impl: Arc<dyn CredentialService>,
+    pub auth_service_impl: Arc<dyn AuthService>,
     pub app_config: Arc<Config>,
 }
 
 impl CredentialHandler {
-    pub fn new(
-        credential_service_impl: Arc<dyn CredentialService>,
-        app_config: Arc<Config>,
-    ) -> Self {
+    pub fn new(auth_service_impl: Arc<dyn AuthService>, app_config: Arc<Config>) -> Self {
         CredentialHandler {
-            credential_service_impl,
+            auth_service_impl,
             app_config,
         }
     }
 
     pub fn configuration_v1(&self, cfg: &mut web::ServiceConfig) {
         let scope = web::scope("/v1/auth")
-            .app_data(web::Data::new(self.credential_service_impl.clone()))
+            .app_data(web::Data::new(self.auth_service_impl.clone()))
             .service(credential_auth);
         cfg.service(scope);
     }
@@ -35,15 +32,23 @@ impl CredentialHandler {
 #[post("/signup")]
 async fn credential_auth(
     req: HttpRequest,
-    req_payload: Json<schema::AuthRequest>,
-    credential_service: web::Data<Arc<dyn CredentialService>>,
+    req_payload: Json<auth_service_schema::SignupRequest>,
+    auth_service: web::Data<Arc<dyn AuthService>>,
 ) -> impl Responder {
     let ctx = RequestContext::new(req);
-    let result = credential_service
-        .create(req_payload.username.as_str(), req_payload.password.as_str())
+    let result = auth_service
+        .signup(auth_service_schema::SignupRequest {
+            credential_username: req_payload.credential_username.clone(),
+            credential_password: req_payload.credential_password.clone(),
+            user_name: req_payload.user_name.clone(),
+            user_birthdate: req_payload.user_birthdate.clone(),
+            user_gender: req_payload.user_gender.clone(),
+            user_latitude: req_payload.user_latitude.clone(),
+            user_longitude: req_payload.user_longitude.clone(),
+        })
         .await;
     match result {
-        Ok(user) => response::ok(ctx, user),
+        Ok(ok) => response::ok(ctx, ok),
         Err(err) => response::err(ctx, err),
     }
 }

@@ -1,4 +1,4 @@
-use chrono::NaiveDateTime;
+use chrono::{NaiveDate, NaiveDateTime};
 use sqlx::FromRow;
 use uuid::Uuid;
 
@@ -6,7 +6,7 @@ use uuid::Uuid;
 pub struct User {
     pub id: Uuid,
     pub name: Option<String>,
-    pub birthdate: Option<NaiveDateTime>,
+    pub birthdate: Option<NaiveDate>,
     pub gender: Option<String>,
     pub latitude: f64,
     pub longitude: f64,
