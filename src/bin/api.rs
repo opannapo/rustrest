@@ -1,5 +1,7 @@
 use actix_web::{App, HttpServer};
 use rustrest::config::config::Config;
+use rustrest::config::typesense::Typesense;
+use rustrest::pkg::typesense::typesense;
 use rustrest::repository::postgres::postgres::PostgresPool;
 use rustrest::repository::postgres::{base, credential, user};
 use rustrest::service::auth::service::AuthServiceImpl;
@@ -17,8 +19,12 @@ pub async fn main() -> std::io::Result<()> {
     let app_cfg = Arc::new(Config::new());
     debug_info!("main api {:?}", &app_cfg);
 
-    let pool: Arc<Pool<Postgres>> = Arc::new(PostgresPool::new(&app_cfg).await.unwrap().pool);
+    let typesense_pkg = Arc::new(typesense::TypesenseImpl::new(
+        app_cfg.typesense().host(),
+        app_cfg.typesense().api_key(),
+    ));
 
+    let pool: Arc<Pool<Postgres>> = Arc::new(PostgresPool::new(&app_cfg).await.unwrap().pool);
     let base_repo = Arc::new(base::BaseRepositoryImpl::new(Arc::clone(&pool)));
     let cred_repo = Arc::new(credential::CredentialRepoImpl::new(Arc::clone(&pool)));
     let user_repo = Arc::new(user::UserRepoImpl::new(Arc::clone(&pool)));
@@ -28,6 +34,7 @@ pub async fn main() -> std::io::Result<()> {
         base_repo.clone(),
         cred_repo.clone(),
         user_repo.clone(),
+        typesense_pkg.clone(),
     ));
 
     HttpServer::new(move || {

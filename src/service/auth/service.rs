@@ -1,4 +1,5 @@
 use crate::common::internal_error::InternalError;
+use crate::pkg::typesense::typesense::TypeSense;
 use crate::repository::{BaseRepo, CredentialRepo, UserRepo};
 use crate::service::auth::schema::{SignupRequest, SignupResponse};
 use crate::service::user::UserServiceImpl;
@@ -8,6 +9,8 @@ use crate::{debug_error, debug_info, model};
 use async_trait::async_trait;
 use bcrypt::hash;
 use chrono::{NaiveDate, NaiveDateTime};
+use serde::Deserializer;
+use serde_json::json;
 use sqlx::{Postgres, Transaction};
 use std::error::Error;
 use std::sync::Arc;
@@ -16,17 +19,20 @@ pub struct AuthServiceImpl {
     base_repo: Arc<dyn BaseRepo<Postgres>>,
     credential_repo: Arc<dyn CredentialRepo<Postgres>>,
     user_repo: Arc<dyn UserRepo<Postgres>>,
+    typesense_pkg: Arc<dyn TypeSense>,
 }
 impl AuthServiceImpl {
     pub fn new(
         base_repo: Arc<dyn BaseRepo<Postgres>>,
         credential_repo: Arc<dyn CredentialRepo<Postgres>>,
         user_repo: Arc<dyn UserRepo<Postgres>>,
+        typesense_pkg: Arc<dyn TypeSense>,
     ) -> Self {
         AuthServiceImpl {
             base_repo,
             user_repo,
             credential_repo,
+            typesense_pkg,
         }
     }
 }
@@ -58,22 +64,17 @@ impl AuthService for AuthServiceImpl {
             Err(e) => println!("Error parsing date: {}", e),
         }
 
-        match self
-            .user_repo
-            .create(
-                model::user::User {
-                    created_at: now,
-                    birthdate: user_birthdate,
-                    gender: Some(request.user_gender),
-                    id: random_uuid,
-                    latitude: request.user_latitude,
-                    longitude: request.user_longitude,
-                    name: Some(request.user_name),
-                },
-                Some(&mut tx),
-            )
-            .await
-        {
+        let new_user = model::user::User {
+            created_at: now,
+            birthdate: user_birthdate,
+            gender: Some(request.user_gender),
+            id: random_uuid,
+            latitude: request.user_latitude,
+            longitude: request.user_longitude,
+            name: Some(request.user_name),
+        };
+        //let new_user_clone = new_user.clone();
+        match self.user_repo.create(new_user.clone(), Some(&mut tx)).await {
             Ok(_) => {}
             Err(err) => {
                 debug_error!("{}", err);
@@ -104,6 +105,21 @@ impl AuthService for AuthServiceImpl {
                 tx.rollback().await?;
 
                 let err = InternalError::db_exec(format!("create credential {}", err).as_str());
+                return Err(Box::new(err));
+            }
+        }
+
+        match self
+            .typesense_pkg
+            .create("user".to_string(), new_user.clone().to_typesense_json())
+            .await
+        {
+            Ok(()) => {}
+            Err(err) => {
+                debug_error!("{}", err);
+                tx.rollback().await?;
+
+                let err = InternalError::module_typesense(format!("insert to typesense {}", err).as_str());
                 return Err(Box::new(err));
             }
         }

@@ -3,7 +3,7 @@ use std::env;
 
 #[derive(Debug)]
 pub struct Typesense {
-    api_key: string,
+    api_key: String,
     host: String,
 }
 

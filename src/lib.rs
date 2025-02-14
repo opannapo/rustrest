@@ -1,7 +1,8 @@
 pub mod api;
-mod common;
+pub mod common;
 pub mod config;
-mod model;
+pub mod model;
+pub mod pkg;
 pub mod repository;
 pub mod service;
 pub mod util;

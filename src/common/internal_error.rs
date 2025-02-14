@@ -25,4 +25,11 @@ impl InternalError {
             message: message.to_string(),
         }
     }
+    pub fn module_typesense(message: &str) -> Self {
+        InternalError {
+            code: "MODULE_TYPESENSE".to_string(),
+            http_status_code: StatusCode::INTERNAL_SERVER_ERROR,
+            message: message.to_string(),
+        }
+    }
 }
