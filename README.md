@@ -40,17 +40,17 @@ This project is built using a combination of modern technologies aimed at creati
 #
 
 ## Setup
-Rust & Cargo
+### Rust & Cargo
 ```
 curl https://sh.rustup.rs -sSf | sh
 ```
 
-Postgres
+### Postgres
 ```
 docker pull postgres
 ```
 
-JMeter
+### JMeter
 ```
 [1] wget https://downloads.apache.org//jmeter/binaries/apache-jmeter-5.3.zip
 [2] unzip apache-jmeter-5.3.zip
@@ -62,6 +62,39 @@ make build-typesense-compose
 ```
 Dashboard (API_KEY : opannapoTESTapiKEY123):<br>
 https://bfritscher.github.io/typesense-dashboard/#/apikeys
+
+#### Create Collection : User
+cURL
+```
+curl --location 'http://localhost:8108/collections' \
+--header 'X-TYPESENSE-API-KEY: opannapoTESTapiKEY123' \
+--header 'Content-Type: application/json' \
+--data '{
+    "name": "user",
+    "fields": [
+      { "name": "id", "type": "string" },
+      { "name": "name", "type": "string", "optional": true, "facet": false, "index": true },
+      { "name": "birthdate", "type": "string", "optional": true, "index": false },
+      { "name": "gender", "type": "string", "optional": true, "facet": true },
+      { "name": "location", "type": "geopoint", "facet": false, "index": true },
+      { "name": "created_at", "type": "int64", "facet": false, "index": true }
+    ]
+  }'
+```
+Payload
+```
+{
+    "name": "user",
+    "fields": [
+      { "name": "id", "type": "string" },
+      { "name": "name", "type": "string", "optional": true, "facet": false, "index": true },
+      { "name": "birthdate", "type": "string", "optional": true, "index": false },
+      { "name": "gender", "type": "string", "optional": true, "facet": true },
+      { "name": "location", "type": "geopoint", "facet": false, "index": true },
+      { "name": "created_at", "type": "int64", "facet": false, "index": true }
+    ]
+  }
+```
 
 ### Environment Setup
 
