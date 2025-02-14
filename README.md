@@ -163,6 +163,39 @@ Payload
   }
 ```
 
+#### Search User
+cURL
+```
+curl --location 'http://localhost:8108/multi_search?x-typesense-api-key=opannapoTESTapiKEY123' \
+--header 'Accept: application/json, text/plain, */*' \
+--header 'Accept-Language: en-US,en;q=0.9,id;q=0.8' \
+--header 'Connection: keep-alive' \
+--header 'Content-Type: text/plain' \
+--header 'Origin: https://bfritscher.github.io' \
+--header 'Sec-Fetch-Dest: empty' \
+--header 'Sec-Fetch-Mode: cors' \
+--header 'Sec-Fetch-Site: cross-site' \
+--header 'User-Agent: Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Mobile Safari/537.36' \
+--header 'sec-ch-ua: "Chromium";v="130", "Google Chrome";v="130", "Not?A_Brand";v="99"' \
+--header 'sec-ch-ua-mobile: ?1' \
+--header 'sec-ch-ua-platform: "Android"' \
+--data '{
+    "searches": [
+        {
+            "exhaustive_search": true,
+            "query_by": "name,gender",
+            "highlight_full_fields": "name,gender",
+            "collection": "user",
+            "q": "opan",
+            "facet_by": "gender",
+            "max_facet_values": 10,
+            "page": 1,
+            "per_page": 100
+        }
+    ]
+}' 
+```
+
 ### Environment Setup
 
 1. Clone the repository:
