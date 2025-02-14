@@ -1,9 +1,8 @@
-use crate::api::v1::auth::schema::AuthResponse;
 use crate::api::v1::user::schema::UserResponse;
 use async_trait::async_trait;
 use std::error::Error;
 
-pub mod credential;
+pub mod auth;
 pub mod user;
 
 pub trait UserService {
@@ -11,6 +10,9 @@ pub trait UserService {
 }
 
 #[async_trait]
-pub trait CredentialService {
-    async fn create(&self, username: &str, password: &str) -> Result<AuthResponse, Box<dyn Error>>;
+pub trait AuthService {
+    async fn signup(
+        &self,
+        request: auth::schema::SignupRequest,
+    ) -> Result<auth::schema::SignupResponse, Box<dyn Error>>;
 }

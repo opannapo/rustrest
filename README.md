@@ -40,20 +40,87 @@ This project is built using a combination of modern technologies aimed at creati
 #
 
 ## Setup
-Rust & Cargo
+### Rust & Cargo
 ```
 curl https://sh.rustup.rs -sSf | sh
 ```
 
-Postgres
+### Postgres
 ```
 docker pull postgres
 ```
 
-JMeter
+### JMeter
 ```
 [1] wget https://downloads.apache.org//jmeter/binaries/apache-jmeter-5.3.zip
 [2] unzip apache-jmeter-5.3.zip
+```
+#### JSR223 PreProcessor - Random Variable for Signup Simulation
+```java
+import net.datafaker.Faker;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Random;
+
+Faker faker = new Faker();
+
+SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+// Inisialisasi Random
+Random rand = new Random();
+// Pilih negara secara acak
+String[] countries = {"Indonesia", "Malaysia", "Singapore"};
+String selectedCountry = countries[rand.nextInt(countries.length)];
+
+// Tentukan batas koordinat masing-masing negara
+double minLat, maxLat, minLon, maxLon;
+
+switch (selectedCountry) {
+    case "Indonesia":
+        minLat = -11.0; maxLat = 6.0;
+        minLon = 95.0; maxLon = 141.0;
+        break;
+    case "Malaysia":
+        minLat = 0.85; maxLat = 7.4;
+        minLon = 99.6; maxLon = 119.3;
+        break;
+    case "Singapore":
+        minLat = 1.2; maxLat = 1.5;
+        minLon = 103.6; maxLon = 104.0;
+        break;
+    default:
+        throw new RuntimeException("Negara tidak valid");
+}
+
+// Generate koordinat acak dalam rentang
+double randomLat = minLat + (maxLat - minLat) * rand.nextDouble();
+double randomLon = minLon + (maxLon - minLon) * rand.nextDouble();
+
+
+
+String randomName = faker.name().fullName();
+String randomEmail = faker.internet().emailAddress();
+String randomPassword = faker.internet().password();
+String randomBirthday = dateFormat.format(faker.date().birthday(18, 65)); // Format ke String
+
+
+// Simpan ke variabel JMeter
+vars.put("randomName", randomName);
+vars.put("randomEmail", randomEmail);
+vars.put("randomPassword", randomPassword);
+vars.put("randomBirthday", randomBirthday);
+vars.put("randomLatitude", String.valueOf(randomLat));
+vars.put("randomLongitude", String.valueOf(randomLon));
+vars.put("selectedCountry", selectedCountry);
+
+// Debugging log
+log.info("Generated randomName: " + randomName);
+log.info("Generated randomEmail: " + randomEmail);
+log.info("Generated randomPassword: " + randomPassword);
+log.info("Generated randomBirthday: " + randomBirthday);
+log.info("Generated Country: " + selectedCountry);
+log.info("Generated Latitude: " + randomLat);
+log.info("Generated Longitude: " + randomLon);
 ```
 
 ### TypeSense
@@ -62,6 +129,72 @@ make build-typesense-compose
 ```
 Dashboard (API_KEY : opannapoTESTapiKEY123):<br>
 https://bfritscher.github.io/typesense-dashboard/#/apikeys
+
+#### Create Collection : User
+cURL
+```
+curl --location 'http://localhost:8108/collections' \
+--header 'X-TYPESENSE-API-KEY: opannapoTESTapiKEY123' \
+--header 'Content-Type: application/json' \
+--data '{
+    "name": "user",
+    "fields": [
+      { "name": "id", "type": "string" },
+      { "name": "name", "type": "string", "optional": true, "facet": false, "index": true },
+      { "name": "birthdate", "type": "string", "optional": true, "index": false },
+      { "name": "gender", "type": "string", "optional": true, "facet": true },
+      { "name": "location", "type": "geopoint", "facet": false, "index": true },
+      { "name": "created_at", "type": "int64", "facet": false, "index": true }
+    ]
+  }'
+```
+Payload
+```
+{
+    "name": "user",
+    "fields": [
+      { "name": "id", "type": "string" },
+      { "name": "name", "type": "string", "optional": true, "facet": false, "index": true },
+      { "name": "birthdate", "type": "string", "optional": true, "index": false },
+      { "name": "gender", "type": "string", "optional": true, "facet": true },
+      { "name": "location", "type": "geopoint", "facet": false, "index": true },
+      { "name": "created_at", "type": "int64", "facet": false, "index": true }
+    ]
+  }
+```
+
+#### Search User
+cURL
+```
+curl --location 'http://localhost:8108/multi_search?x-typesense-api-key=opannapoTESTapiKEY123' \
+--header 'Accept: application/json, text/plain, */*' \
+--header 'Accept-Language: en-US,en;q=0.9,id;q=0.8' \
+--header 'Connection: keep-alive' \
+--header 'Content-Type: text/plain' \
+--header 'Origin: https://bfritscher.github.io' \
+--header 'Sec-Fetch-Dest: empty' \
+--header 'Sec-Fetch-Mode: cors' \
+--header 'Sec-Fetch-Site: cross-site' \
+--header 'User-Agent: Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Mobile Safari/537.36' \
+--header 'sec-ch-ua: "Chromium";v="130", "Google Chrome";v="130", "Not?A_Brand";v="99"' \
+--header 'sec-ch-ua-mobile: ?1' \
+--header 'sec-ch-ua-platform: "Android"' \
+--data '{
+    "searches": [
+        {
+            "exhaustive_search": true,
+            "query_by": "name,gender",
+            "highlight_full_fields": "name,gender",
+            "collection": "user",
+            "q": "opan",
+            "facet_by": "gender",
+            "max_facet_values": 10,
+            "page": 1,
+            "per_page": 100
+        }
+    ]
+}' 
+```
 
 ### Environment Setup
 
