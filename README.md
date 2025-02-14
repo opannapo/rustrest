@@ -55,6 +55,73 @@ docker pull postgres
 [1] wget https://downloads.apache.org//jmeter/binaries/apache-jmeter-5.3.zip
 [2] unzip apache-jmeter-5.3.zip
 ```
+#### JSR223 PreProcessor - Random Variable for Signup Simulation
+```java
+import net.datafaker.Faker;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Random;
+
+Faker faker = new Faker();
+
+SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+// Inisialisasi Random
+Random rand = new Random();
+// Pilih negara secara acak
+String[] countries = {"Indonesia", "Malaysia", "Singapore"};
+String selectedCountry = countries[rand.nextInt(countries.length)];
+
+// Tentukan batas koordinat masing-masing negara
+double minLat, maxLat, minLon, maxLon;
+
+switch (selectedCountry) {
+    case "Indonesia":
+        minLat = -11.0; maxLat = 6.0;
+        minLon = 95.0; maxLon = 141.0;
+        break;
+    case "Malaysia":
+        minLat = 0.85; maxLat = 7.4;
+        minLon = 99.6; maxLon = 119.3;
+        break;
+    case "Singapore":
+        minLat = 1.2; maxLat = 1.5;
+        minLon = 103.6; maxLon = 104.0;
+        break;
+    default:
+        throw new RuntimeException("Negara tidak valid");
+}
+
+// Generate koordinat acak dalam rentang
+double randomLat = minLat + (maxLat - minLat) * rand.nextDouble();
+double randomLon = minLon + (maxLon - minLon) * rand.nextDouble();
+
+
+
+String randomName = faker.name().fullName();
+String randomEmail = faker.internet().emailAddress();
+String randomPassword = faker.internet().password();
+String randomBirthday = dateFormat.format(faker.date().birthday(18, 65)); // Format ke String
+
+
+// Simpan ke variabel JMeter
+vars.put("randomName", randomName);
+vars.put("randomEmail", randomEmail);
+vars.put("randomPassword", randomPassword);
+vars.put("randomBirthday", randomBirthday);
+vars.put("randomLatitude", String.valueOf(randomLat));
+vars.put("randomLongitude", String.valueOf(randomLon));
+vars.put("selectedCountry", selectedCountry);
+
+// Debugging log
+log.info("Generated randomName: " + randomName);
+log.info("Generated randomEmail: " + randomEmail);
+log.info("Generated randomPassword: " + randomPassword);
+log.info("Generated randomBirthday: " + randomBirthday);
+log.info("Generated Country: " + selectedCountry);
+log.info("Generated Latitude: " + randomLat);
+log.info("Generated Longitude: " + randomLon);
+```
 
 ### TypeSense
 ```
