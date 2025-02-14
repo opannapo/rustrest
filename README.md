@@ -196,6 +196,342 @@ curl --location 'http://localhost:8108/multi_search?x-typesense-api-key=opannapo
 }' 
 ```
 
+#### Search User By Location - Radius 20Km from Jakarta
+cURL
+```
+curl --location 'http://localhost:8108/multi_search?x-typesense-api-key=1UISuGDjx1FADyRkr01TIAQbLi0suvlG' \
+--header 'Content-Type: application/json' \
+--data '{
+    "searches": [
+        {
+            "exhaustive_search": true,
+            "query_by": "name,gender",
+            "highlight_full_fields": "name,gender",
+            "collection": "user",
+            "q": "",
+            "facet_by": "gender",
+            "max_facet_values": 10,
+            "page": 1,
+            "per_page": 100,
+            "filter_by": "location:(-6.2088, 106.8456, 20 km)"
+        }
+    ]
+}'
+```
+Example Result
+```
+{
+    "results": [
+        {
+            "facet_counts": [
+                {
+                    "counts": [
+                        {
+                            "count": 11,
+                            "highlighted": "M",
+                            "value": "M"
+                        }
+                    ],
+                    "field_name": "gender",
+                    "sampled": false,
+                    "stats": {
+                        "total_values": 1
+                    }
+                }
+            ],
+            "found": 11,
+            "hits": [
+                {
+                    "document": {
+                        "birthdate": "1987-10-23",
+                        "created_at": 1739564190,
+                        "gender": "M",
+                        "id": "d4151fb1-1f38-4a25-ae53-e564b41f7126",
+                        "location": [
+                            -6.2773045877828855,
+                            106.75307093418604
+                        ],
+                        "name": "Miss Bertha Maggio"
+                    },
+                    "highlight": {},
+                    "highlights": [],
+                    "text_match": 100,
+                    "text_match_info": {
+                        "best_field_score": "0",
+                        "best_field_weight": 12,
+                        "fields_matched": 4,
+                        "num_tokens_dropped": 1,
+                        "score": "100",
+                        "tokens_matched": 0,
+                        "typo_prefix_score": 255
+                    }
+                },
+                {
+                    "document": {
+                        "birthdate": "1993-07-28",
+                        "created_at": 1739564153,
+                        "gender": "M",
+                        "id": "f933bc2a-115f-47b1-8ec8-8584e6ee8a99",
+                        "location": [
+                            -6.1575376039061505,
+                            106.79271478235609
+                        ],
+                        "name": "Marietta Corwin"
+                    },
+                    "highlight": {},
+                    "highlights": [],
+                    "text_match": 100,
+                    "text_match_info": {
+                        "best_field_score": "0",
+                        "best_field_weight": 12,
+                        "fields_matched": 4,
+                        "num_tokens_dropped": 1,
+                        "score": "100",
+                        "tokens_matched": 0,
+                        "typo_prefix_score": 255
+                    }
+                },
+                {
+                    "document": {
+                        "birthdate": "1966-09-21",
+                        "created_at": 1739564068,
+                        "gender": "M",
+                        "id": "9b01c347-4956-40f6-b1fe-2a52c69d6a88",
+                        "location": [
+                            -6.361107028810105,
+                            106.90698950922103
+                        ],
+                        "name": "Dale Von"
+                    },
+                    "highlight": {},
+                    "highlights": [],
+                    "text_match": 100,
+                    "text_match_info": {
+                        "best_field_score": "0",
+                        "best_field_weight": 12,
+                        "fields_matched": 4,
+                        "num_tokens_dropped": 1,
+                        "score": "100",
+                        "tokens_matched": 0,
+                        "typo_prefix_score": 255
+                    }
+                },
+                {
+                    "document": {
+                        "birthdate": "2000-09-18",
+                        "created_at": 1739564038,
+                        "gender": "M",
+                        "id": "1d4771c3-6b8e-4797-ae1b-317d01a3a30f",
+                        "location": [
+                            -6.199762270354816,
+                            106.82928553951272
+                        ],
+                        "name": "Kenny Rosenbaum"
+                    },
+                    "highlight": {},
+                    "highlights": [],
+                    "text_match": 100,
+                    "text_match_info": {
+                        "best_field_score": "0",
+                        "best_field_weight": 12,
+                        "fields_matched": 4,
+                        "num_tokens_dropped": 1,
+                        "score": "100",
+                        "tokens_matched": 0,
+                        "typo_prefix_score": 255
+                    }
+                },
+                {
+                    "document": {
+                        "birthdate": "1967-09-12",
+                        "created_at": 1739563957,
+                        "gender": "M",
+                        "id": "5c95558b-d305-401d-a348-2b88c0ec017a",
+                        "location": [
+                            -6.199906018885609,
+                            106.8907922763888
+                        ],
+                        "name": "Kory Franecki DDS"
+                    },
+                    "highlight": {},
+                    "highlights": [],
+                    "text_match": 100,
+                    "text_match_info": {
+                        "best_field_score": "0",
+                        "best_field_weight": 12,
+                        "fields_matched": 4,
+                        "num_tokens_dropped": 1,
+                        "score": "100",
+                        "tokens_matched": 0,
+                        "typo_prefix_score": 255
+                    }
+                },
+                {
+                    "document": {
+                        "birthdate": "2001-11-21",
+                        "created_at": 1739563934,
+                        "gender": "M",
+                        "id": "17a3e44f-7d99-47b0-8a9a-59c613406bf0",
+                        "location": [
+                            -6.09314404559615,
+                            106.86837746717852
+                        ],
+                        "name": "Doug Herman DDS"
+                    },
+                    "highlight": {},
+                    "highlights": [],
+                    "text_match": 100,
+                    "text_match_info": {
+                        "best_field_score": "0",
+                        "best_field_weight": 12,
+                        "fields_matched": 4,
+                        "num_tokens_dropped": 1,
+                        "score": "100",
+                        "tokens_matched": 0,
+                        "typo_prefix_score": 255
+                    }
+                },
+                {
+                    "document": {
+                        "birthdate": "1960-09-08",
+                        "created_at": 1739563769,
+                        "gender": "M",
+                        "id": "f19316d8-0940-4f2e-90a2-a772d3178afb",
+                        "location": [
+                            -6.231700501300244,
+                            106.67398401525512
+                        ],
+                        "name": "Faustino Doyle"
+                    },
+                    "highlight": {},
+                    "highlights": [],
+                    "text_match": 100,
+                    "text_match_info": {
+                        "best_field_score": "0",
+                        "best_field_weight": 12,
+                        "fields_matched": 4,
+                        "num_tokens_dropped": 1,
+                        "score": "100",
+                        "tokens_matched": 0,
+                        "typo_prefix_score": 255
+                    }
+                },
+                {
+                    "document": {
+                        "birthdate": "1995-09-05",
+                        "created_at": 1739563623,
+                        "gender": "M",
+                        "id": "d0bb3be7-6273-47d2-8275-b833416593fa",
+                        "location": [
+                            -6.09730410213408,
+                            106.93067136446145
+                        ],
+                        "name": "Leann Krajcik"
+                    },
+                    "highlight": {},
+                    "highlights": [],
+                    "text_match": 100,
+                    "text_match_info": {
+                        "best_field_score": "0",
+                        "best_field_weight": 12,
+                        "fields_matched": 4,
+                        "num_tokens_dropped": 1,
+                        "score": "100",
+                        "tokens_matched": 0,
+                        "typo_prefix_score": 255
+                    }
+                },
+                {
+                    "document": {
+                        "birthdate": "2000-05-16",
+                        "created_at": 1739563620,
+                        "gender": "M",
+                        "id": "1f8622fa-a96f-42be-afc9-9436420e2105",
+                        "location": [
+                            -6.384327640653132,
+                            106.83853896477709
+                        ],
+                        "name": "Ms. Kurtis Barrows"
+                    },
+                    "highlight": {},
+                    "highlights": [],
+                    "text_match": 100,
+                    "text_match_info": {
+                        "best_field_score": "0",
+                        "best_field_weight": 12,
+                        "fields_matched": 4,
+                        "num_tokens_dropped": 1,
+                        "score": "100",
+                        "tokens_matched": 0,
+                        "typo_prefix_score": 255
+                    }
+                },
+                {
+                    "document": {
+                        "birthdate": "1982-11-25",
+                        "created_at": 1739563591,
+                        "gender": "M",
+                        "id": "dcbc4b54-2d71-4f8f-84de-1706e6022595",
+                        "location": [
+                            -6.194732171864411,
+                            106.89593038206074
+                        ],
+                        "name": "Dr. Freddy Turner"
+                    },
+                    "highlight": {},
+                    "highlights": [],
+                    "text_match": 100,
+                    "text_match_info": {
+                        "best_field_score": "0",
+                        "best_field_weight": 12,
+                        "fields_matched": 4,
+                        "num_tokens_dropped": 1,
+                        "score": "100",
+                        "tokens_matched": 0,
+                        "typo_prefix_score": 255
+                    }
+                },
+                {
+                    "document": {
+                        "birthdate": "1988-07-20",
+                        "created_at": 1739563480,
+                        "gender": "M",
+                        "id": "02c3c145-192b-476d-9261-5fb8631608dd",
+                        "location": [
+                            -6.2349,
+                            107.0008
+                        ],
+                        "name": "opannapo"
+                    },
+                    "highlight": {},
+                    "highlights": [],
+                    "text_match": 100,
+                    "text_match_info": {
+                        "best_field_score": "0",
+                        "best_field_weight": 12,
+                        "fields_matched": 4,
+                        "num_tokens_dropped": 1,
+                        "score": "100",
+                        "tokens_matched": 0,
+                        "typo_prefix_score": 255
+                    }
+                }
+            ],
+            "out_of": 195909,
+            "page": 1,
+            "request_params": {
+                "collection_name": "user",
+                "first_q": "",
+                "per_page": 100,
+                "q": ""
+            },
+            "search_cutoff": false,
+            "search_time_ms": 1
+        }
+    ]
+}
+```
+
 ### Environment Setup
 
 1. Clone the repository:
