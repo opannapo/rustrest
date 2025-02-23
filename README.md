@@ -9,6 +9,7 @@ This project is built using a combination of modern technologies aimed at creati
 ## Technologies Used
 
 - **Rust**: The main language for the backend, providing high performance and memory safety.
+- **TypeSense** Search Engine
 - **Tokio**: An asynchronous runtime for Rust to enable concurrent operations.
 - **actix-web**: A powerful, actor-based web framework for Rust that helps in building fast and reliable APIs.
 - **sqlx**: An asynchronous SQL crate for Rust that interacts with Postgres and handles database queries and transactions.
@@ -26,6 +27,7 @@ This project is built using a combination of modern technologies aimed at creati
 - **Secure Password Storage**: Passwords are hashed using `bcrypt` before being stored in the database.
 - **Scalable and Concurrent**: Powered by `actix-web` and `Tokio`, the system is designed to handle large-scale, concurrent operations.
 - **Sqlx Migration**: Powered by `sqlx`.
+- **TypeSense** Integration
 
 #
 
@@ -218,8 +220,10 @@ curl --location 'http://localhost:8108/multi_search?x-typesense-api-key=1UISuGDj
     ]
 }'
 ```
-Example Result
-```
+<details>
+  <summary>Example Result</summary>
+
+```json
 {
     "results": [
         {
@@ -531,6 +535,9 @@ Example Result
     ]
 }
 ```
+</details>
+
+#
 
 ### Environment Setup
 
